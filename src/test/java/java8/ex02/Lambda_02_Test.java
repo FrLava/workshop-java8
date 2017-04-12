@@ -20,14 +20,40 @@ public class Lambda_02_Test {
     interface PersonToAccountMapper {
         Account map(Person p);
     }
+    interface PersonToStringMapper{
+    	String map(Person p);
+    }
+    interface GenericMapper<T, R>{
+    	R map(T objet);
+    }
     // end::PersonToAccountMapper[]
 
     // tag::map[]
     private List<Account> map(List<Person> personList, PersonToAccountMapper mapper) {
         // TODO implémenter la méthode
-        return null;
+    	List<Account> compte=new ArrayList<>();
+    	
+    	for(Person p:personList)
+    	{
+    		compte.add(mapper.map(p));
+    	}
+    	
+        return compte;
     }
     // end::map[]
+
+    private List<String> map2(List<Person> personList,GenericMapper<Person, String> mapper) {
+        // TODO implémenter la méthode
+    	List<String> prenom=new ArrayList<>();
+    	
+    	for(Person p:personList)
+    	{
+    		prenom.add(mapper.map(p));
+    	}
+    	
+        return prenom;
+    }
+    
 
 
     // tag::test_map_person_to_account[]
@@ -35,11 +61,29 @@ public class Lambda_02_Test {
     public void test_map_person_to_account() throws Exception {
 
         List<Person> personList = Data.buildPersonList(100);
-
+        //List<Account> compte=new ArrayList<>();
         // TODO transformer la liste de personnes en liste de comptes
         // TODO tous les objets comptes ont un solde à 100 par défaut
-        List<Account> result = map(personList, null);
-
+        List<Account> result = map(personList, new PersonToAccountMapper() {
+			
+			@Override
+			public Account map(Person p) {
+				Account acc = new Account();
+				acc.setOwner(p);
+				acc.setBalance(100);
+				return acc;
+			}
+		});
+        
+List<Account> result2 = map(personList, p ->{
+				Account acc = new Account();
+				acc.setOwner(p);
+				acc.setBalance(100);
+				return acc;
+			}
+		);
+        
+        
         assertThat(result, hasSize(personList.size()));
         assertThat(result, everyItem(hasProperty("balance", is(100))));
         assertThat(result, everyItem(hasProperty("owner", notNullValue())));
@@ -53,7 +97,8 @@ public class Lambda_02_Test {
         List<Person> personList = Data.buildPersonList(100);
 
         // TODO transformer la liste de personnes en liste de prénoms
-        List<String> result = null;
+        List<String> result = map2(personList,p ->p.getFirstname());
+
 
         assertThat(result, hasSize(personList.size()));
         assertThat(result, everyItem(instanceOf(String.class)));
