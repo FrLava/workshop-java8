@@ -23,6 +23,7 @@ public class Lambda_03_Test {
     // tag::forEach[]
     private void forEach(List<Person> source, PersonProcessor processor) {
        // TOD0
+    	
     }
     // end::forEach[]
 
