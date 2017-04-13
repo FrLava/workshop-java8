@@ -135,7 +135,8 @@ public class Stream_01_Test {
         // TODO Trouver la pizza la moins chère dont le prix est >= 950
         Optional<Pizza> result = pizzas.stream()
         		.filter(p->p.getPrice()>=950)
-        		.min((p1,p2)->Integer.compare(p1.getPrice(), p2.getPrice()));
+        		//.min((p1,p2)->Integer.compare(p1.getPrice(), p2.getPrice()));
+        		.min(Comparator.comparing(Pizza::getPrice));
 
         assertThat(result.isPresent(), is(true));
         assertThat(result.get(), hasProperty("id", is(3)));
